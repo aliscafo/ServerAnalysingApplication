@@ -1,0 +1,44 @@
+Server Architecture: With SingleThreadExecutor
+X (number of queries): 5
+Parameter: ∆ (interval between queries)
+From: 10
+To: 1000
+Step: 30
+Constant N (array size): 10000
+Constant M (number of clients): 5
+
+342
+316
+312
+288
+275
+288
+277
+308
+293
+295
+299
+275
+284
+319
+241
+287
+285
+244
+280
+278
+272
+276
+280
+277
+277
+277
+280
+275
+276
+263
+271
+280
+265
+275
+

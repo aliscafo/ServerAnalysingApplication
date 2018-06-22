@@ -1,0 +1,20 @@
+Server Architecture: Non-blocking
+X (number of queries): 5
+Parameter: M (number of clients)
+From: 1
+To: 20
+Step: 2
+Constant N (array size): 10000
+Constant ∆ (interval between queries): 20
+
+201
+304
+464
+616
+828
+1072
+1183
+1347
+1560
+1717
+

@@ -1,0 +1,20 @@
+Server Architecture: One thread per client
+X (number of queries): 5
+Parameter: M (number of clients)
+From: 1
+To: 20
+Step: 2
+Constant N (array size): 10000
+Constant ∆ (interval between queries): 20
+
+185
+241
+361
+548
+800
+814
+1020
+1126
+1197
+1194
+
