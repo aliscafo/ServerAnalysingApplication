@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="590.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbau.erokhina.controller.Controller">
+   <children>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="31.0" layoutY="40.0" prefHeight="48.0" prefWidth="297.0" style="-fx-background-color: transparent;" text="Choose server architecture:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <ChoiceBox fx:id="choose_architecture" layoutX="341.0" layoutY="46.0" prefHeight="27.0" prefWidth="227.0" />
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="33.0" layoutY="102.0" prefHeight="48.0" prefWidth="320.0" style="-fx-background-color: transparent;" text="Choose X (number of queries):">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="number_of_queries" layoutX="365.0" layoutY="96.0" prefHeight="48.0" prefWidth="97.0">
+         <font>
+            <Font size="20.0" />
+         </font></TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="33.0" layoutY="164.0" prefHeight="48.0" prefWidth="303.0" style="-fx-background-color: transparent;" text="Choose changing parameter:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <ChoiceBox fx:id="parameter" layoutX="340.0" layoutY="172.0" prefHeight="27.0" prefWidth="168.0" />
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="11.0" layoutY="226.0" prefHeight="48.0" prefWidth="227.0" style="-fx-background-color: transparent;" text="Choose borders:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="221.0" layoutY="226.0" prefHeight="48.0" prefWidth="79.0" style="-fx-background-color: transparent;" text="from">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="from" layoutX="297.0" layoutY="233.0" prefHeight="34.0" prefWidth="79.0" />
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="385.0" layoutY="226.0" prefHeight="48.0" prefWidth="79.0" style="-fx-background-color: transparent;" text="to">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="to" layoutX="448.0" layoutY="233.0" prefHeight="34.0" prefWidth="79.0" />
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="11.0" layoutY="291.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="Choose step:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="step" layoutX="191.0" layoutY="289.0" prefHeight="48.0" prefWidth="97.0" />
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="-3.0" layoutY="358.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="Choose N:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="-3.0" layoutY="406.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="Choose M:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="-4.0" layoutY="454.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="Choose ∆:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="array_size" layoutX="163.0" layoutY="361.0" prefHeight="34.0" prefWidth="79.0" />
+      <TextField fx:id="number_of_clients" layoutX="163.0" layoutY="412.0" prefHeight="34.0" prefWidth="79.0" />
+      <TextField fx:id="delta" layoutX="163.0" layoutY="461.0" prefHeight="34.0" prefWidth="79.0" />
+      <Button fx:id="ok_button" layoutX="251.0" layoutY="522.0" mnemonicParsing="false" onAction="#okButtonOnAction" prefHeight="48.0" prefWidth="88.0" text="OK">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="281.0" layoutY="358.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="(if it is constant)">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="281.0" layoutY="408.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="(if it is constant)">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="281.0" layoutY="458.0" prefHeight="48.0" prefWidth="191.0" style="-fx-background-color: transparent;" text="(if it is constant)">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField alignment="TOP_CENTER" editable="false" focusTraversable="false" layoutX="241.0" layoutY="468.0" prefHeight="27.0" prefWidth="40.0" style="-fx-background-color: transparent;" text="ms">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+   </children>
+</AnchorPane>

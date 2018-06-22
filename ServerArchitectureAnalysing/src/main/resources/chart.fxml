@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="590.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.spbau.erokhina.controller.Controller">
+   <children>
+      <LineChart fx:id="lineChart" layoutX="34.0" layoutY="80.0" prefHeight="425.0" prefWidth="535.0">
+        <xAxis>
+          <NumberAxis prefHeight="15.0" prefWidth="476.0" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <Button fx:id="rightArrow" layoutX="450.0" layoutY="521.0" mnemonicParsing="false" onAction="#rightArrowOnAction" prefHeight="47.0" prefWidth="85.0" text="→">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Button>
+      <Button fx:id="leftArrow" layoutX="89.0" layoutY="521.0" mnemonicParsing="false" onAction="#leftArrowOnAction" prefHeight="47.0" prefWidth="85.0" text="←">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
