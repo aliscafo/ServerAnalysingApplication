@@ -2,6 +2,7 @@ package ru.spbau.erokhina.client;
 
 import javafx.scene.control.Alert;
 import ru.spbau.erokhina.common.CurrentInfo;
+import ru.spbau.erokhina.controller.Controller;
 import ru.spbau.erokhina.proto.MyArrayProtos;
 import ru.spbau.erokhina.common.Statistics;
 
@@ -10,6 +11,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,15 +28,22 @@ public class Client implements Runnable {
      * @param port given port
      */
     public Client(String host, int port) throws IOException {
-        InetAddress address = InetAddress.getByName(host);
+        InetAddress address;
+        try {
+            address = InetAddress.getByName(host);
+            socket = new Socket(address, port);
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
 
-        socket = new Socket(address, port);
-
-        in = new DataInputStream(socket.getInputStream());
-        out = new DataOutputStream(socket.getOutputStream());
+        } catch (UnknownHostException e) {
+            throw new IOException("Unable to connect to server, testing failed.");
+        } catch (IOException e) {
+            socket.close();
+            throw new IOException("Unable to connect to server, testing failed.");
+        }
     }
 
-    public void sendRequestAndReceiveAnswer() throws IOException, InterruptedException {
+    private void sendRequestAndReceiveAnswer() throws IOException, InterruptedException {
         List<Integer> list = new ArrayList<>();
 
         for (int i = 0; i < CurrentInfo.getArraySize(); i++) {
@@ -61,9 +70,6 @@ public class Client implements Runnable {
         Statistics.getInstance().addQueryTime(queryTimeMs);
         Statistics.getInstance().addClientTime(clientTimeMs);
 
-        MyArrayProtos.MyArray receivedArray = MyArrayProtos.MyArray.parseFrom(bytes);
-        List<Integer> receivedArrayDataList = receivedArray.getDataList();
-
         Thread.sleep(CurrentInfo.getDeltaInterval());
     }
 
@@ -75,6 +81,7 @@ public class Client implements Runnable {
                 sendRequestAndReceiveAnswer();
             } catch (IOException | InterruptedException e) {
                 showAlert("Something went wrong while processing the request.");
+                Controller.setTestingFailed();
             }
         }
 
@@ -82,6 +89,7 @@ public class Client implements Runnable {
             out.writeInt(0);
         } catch (IOException e) {
             showAlert("Couldn't write symbol of ending the work of the client.");
+            Controller.setTestingFailed();
         }
 
         long finish = System.currentTimeMillis();
@@ -92,6 +100,7 @@ public class Client implements Runnable {
             closeAll();
         } catch (IOException e) {
             showAlert("Couldn't close socket or streams.");
+            Controller.setTestingFailed();
         }
     }
 
@@ -104,7 +113,7 @@ public class Client implements Runnable {
     /**
      * Method for closing socket and streams.
      */
-    public void closeAll() throws IOException {
+    private void closeAll() throws IOException {
         socket.close();
         in.close();
         out.close();

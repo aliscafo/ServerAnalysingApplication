@@ -24,6 +24,7 @@ public class ThreadPerClientServer {
         try {
             serverSocket = new ServerSocket(serverPort);
         } catch (Exception e) {
+            stopServer();
             return;
         }
 
@@ -35,10 +36,13 @@ public class ThreadPerClientServer {
                         new OneThreadedServer(socket);
                     } catch (IOException e) {
                         socket.close();
+                        stopServer();
+                        return;
                     }
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                System.err.println("Unable to accept new client, stop server.");
+                stopServer();
             }
         }).start();
     }
@@ -66,7 +70,7 @@ public class ThreadPerClientServer {
 
         public void run () {
             try {
-                while (true) {
+                while (flag) {
                     long startClientTime = System.currentTimeMillis();
                     int size = in.readInt();
 
@@ -102,13 +106,12 @@ public class ThreadPerClientServer {
                 stopServer();
             } catch (IOException e) {
                 stopServer();
-                e.printStackTrace();
             } finally {
                 try {
                     socket.close();
                 }
                 catch (IOException e) {
-                    System.err.println("Socket was not closed");
+                    System.err.println("Socket was not closed.");
                 }
             }
         }

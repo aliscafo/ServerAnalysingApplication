@@ -28,6 +28,7 @@ public class WithSingleThreadExecutorServer {
         try {
             serverSocket = new ServerSocket(serverPort);
         } catch (Exception e) {
+            stopServer();
             return;
         }
 
@@ -39,10 +40,13 @@ public class WithSingleThreadExecutorServer {
                         new OneThreadedServer(socket);
                     } catch (IOException e) {
                         socket.close();
+                        stopServer();
+                        return;
                     }
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                System.err.println("Unable to accept new client, stop server.");
+                stopServer();
             }
         }).start();
     }
@@ -52,6 +56,7 @@ public class WithSingleThreadExecutorServer {
      */
     public void stopServer() {
         flag = false;
+        poolExecutor.shutdown();
     }
 
     private class OneThreadedServer extends Thread {
@@ -72,7 +77,7 @@ public class WithSingleThreadExecutorServer {
 
         public void run () {
             try {
-                while (true) {
+                while (flag) {
                     long startClientTime = System.currentTimeMillis();
                     int size = in.readInt();
 
@@ -85,49 +90,47 @@ public class WithSingleThreadExecutorServer {
                     MyArrayProtos.MyArray receivedArray = MyArrayProtos.MyArray.parseFrom(bytes);
                     List<Integer> list = receivedArray.getDataList();
 
-                    poolExecutor.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            long startQueryTime = System.currentTimeMillis();
-                            List<Integer> sortedList = Utils.selectedSort(list);
-                            long finishQueryTime = System.currentTimeMillis();
+                    poolExecutor.submit(() -> {
+                        long startQueryTime = System.currentTimeMillis();
+                        List<Integer> sortedList = Utils.selectedSort(list);
+                        long finishQueryTime = System.currentTimeMillis();
 
-                            sender.submit(() -> {
-                                MyArrayProtos.MyArray myArray = MyArrayProtos.MyArray.newBuilder()
-                                        .addAllData(sortedList)
-                                        .build();
+                        sender.submit(() -> {
+                            MyArrayProtos.MyArray myArray = MyArrayProtos.MyArray.newBuilder()
+                                    .addAllData(sortedList)
+                                    .build();
 
-                                try {
-                                    out.writeInt(myArray.toByteArray().length);
-                                    out.write(myArray.toByteArray());
-                                    out.flush();
+                            try {
+                                out.writeInt(myArray.toByteArray().length);
+                                out.write(myArray.toByteArray());
+                                out.flush();
 
-                                    long finishClientTime = System.currentTimeMillis();
+                                long finishClientTime = System.currentTimeMillis();
 
-                                    out.writeLong(finishQueryTime - startQueryTime);
-                                    out.writeLong(finishClientTime - startClientTime);
-                                    out.flush();
+                                out.writeLong(finishQueryTime - startQueryTime);
+                                out.writeLong(finishClientTime - startClientTime);
+                                out.flush();
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        }
+                            } catch (IOException e) {
+                                System.err.println("IO error during result handling.");
+                                stopServer();
+                            }
+                        });
                     });
                 }
 
             } catch (InvalidProtocolBufferException e) {
-                System.out.println("Invalid protocol exception: " + e.getMessage());
+                System.err.println("Invalid protocol exception: " + e.getMessage());
                 stopServer();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("IO error during result handling.");
                 stopServer();
             } finally {
                 try {
                     socket.close();
                 }
                 catch (IOException e) {
-                    System.err.println("Socket was not closed");
+                    System.err.println("Socket was not closed.");
                 }
             }
         }

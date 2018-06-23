@@ -24,9 +24,11 @@ public class NonBlockingServer {
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.bind(new InetSocketAddress(16202));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Unable to open channel.");
+            shutdown();
         }
     }
+
     private boolean isFinished = false;
 
     private ExecutorService threadPool = Executors.newFixedThreadPool(4);
@@ -53,6 +55,7 @@ public class NonBlockingServer {
 
     public void shutdown() {
         isFinished = true;
+        threadPool.shutdown();
         try {
             serverSocketChannel.close();
         } catch (IOException e) {

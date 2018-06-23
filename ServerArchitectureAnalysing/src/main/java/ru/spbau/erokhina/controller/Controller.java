@@ -1,5 +1,6 @@
 package ru.spbau.erokhina.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -7,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -20,7 +22,17 @@ import java.io.Writer;
 import java.util.Objects;
 
 public class Controller {
-    public void okButtonOnAction(ActionEvent actionEvent) throws IOException {
+    private static boolean testingFailed = false;
+
+    public static boolean isTestingFailed() {
+        return testingFailed;
+    }
+
+    public static void setTestingFailed() {
+        testingFailed = true;
+    }
+
+    public void okButtonOnAction(ActionEvent actionEvent) {
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
         ChoiceBox<String> choiceBoxArchitecture = (ChoiceBox<String>) stage.getScene().lookup("#choose_architecture");
@@ -99,6 +111,15 @@ public class Controller {
         RunClients runClients = new RunClients();
         runClients.run();
 
+        if (isTestingFailed()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error during testing");
+            alert.setContentText("Fatal error during testing occurred: test packages weren't completed, testing failed.");
+            alert.showAndWait();
+            Platform.exit();
+            return;
+        }
+
         writeDataToFiles();
 
         loadQueryTimeChart(stage);
@@ -117,6 +138,10 @@ public class Controller {
         }
         catch(IOException e){
             System.out.println("Error while writing data to files: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error during write results");
+            alert.setContentText("Application was unable to write results of testing.");
+            alert.showAndWait();
         }
 
         try(FileWriter writer = new FileWriter("clientTime.txt", false)) {
@@ -131,6 +156,10 @@ public class Controller {
         }
         catch(IOException e){
             System.out.println("Error while writing data to files: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error during write results.");
+            alert.setContentText("Application was unable to write results of testing.");
+            alert.showAndWait();
         }
 
         try(FileWriter writer = new FileWriter("averageQueryTime.txt", false)) {
@@ -145,6 +174,10 @@ public class Controller {
         }
         catch(IOException e){
             System.out.println("Error while writing data to files: " + e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error during write results.");
+            alert.setContentText("Application was unable to write results of testing.");
+            alert.showAndWait();
         }
     }
 
@@ -185,7 +218,7 @@ public class Controller {
         }
     }
 
-    public void leftArrowOnAction(ActionEvent actionEvent) throws IOException {
+    public void leftArrowOnAction(ActionEvent actionEvent) {
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
         switch (CurrentInfo.getCurChart()) {
@@ -202,8 +235,14 @@ public class Controller {
         }
     }
 
-    private void loadQueryTimeChart (Stage stage) throws IOException {
-        Parent panel = FXMLLoader.load(Controller.class.getResource("/chart.fxml"));
+    private void loadQueryTimeChart (Stage stage) {
+        Parent panel = null;
+        try {
+            panel = FXMLLoader.load(Controller.class.getResource("/chart.fxml"));
+        } catch (IOException e) {
+            System.out.println("Unable to load application window, stop application...");
+            Platform.exit();
+        }
         Scene scene = new Scene(panel, 600, 590);
 
         LineChart<?,?> lineChart = (LineChart<?, ?>) scene.lookup("#lineChart");
@@ -221,8 +260,14 @@ public class Controller {
         stage.show();
     }
 
-    private void loadClientTimeChart (Stage stage) throws IOException {
-        Parent panel = FXMLLoader.load(Controller.class.getResource("/chart.fxml"));
+    private void loadClientTimeChart (Stage stage) {
+        Parent panel = null;
+        try {
+            panel = FXMLLoader.load(Controller.class.getResource("/chart.fxml"));
+        } catch (IOException e) {
+            System.out.println("Unable to load application window, stop application...");
+            Platform.exit();
+        }
         Scene scene = new Scene(panel, 600, 590);
 
         LineChart<?,?> lineChart = (LineChart<?, ?>) scene.lookup("#lineChart");
@@ -240,8 +285,14 @@ public class Controller {
         stage.show();
     }
 
-    private void loadAverageQueryTimeChart (Stage stage) throws IOException {
-        Parent panel = FXMLLoader.load(Controller.class.getResource("/chart.fxml"));
+    private void loadAverageQueryTimeChart (Stage stage) {
+        Parent panel = null;
+        try {
+            panel = FXMLLoader.load(Controller.class.getResource("/chart.fxml"));
+        } catch (IOException e) {
+            System.out.println("Unable to load application window, stop application...");
+            Platform.exit();
+        }
         Scene scene = new Scene(panel, 600, 590);
 
         LineChart<?,?> lineChart = (LineChart<?, ?>) scene.lookup("#lineChart");

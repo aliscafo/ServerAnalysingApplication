@@ -17,7 +17,7 @@ public class ServerAnalysingApplication extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         setMenu(primaryStage);
 
         primaryStage.setTitle("Server Analysing Application");
